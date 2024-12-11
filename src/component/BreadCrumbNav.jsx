@@ -17,14 +17,10 @@ const routes = [
 export default function BreadCrumbNav() {
   const breadcrumbs = useBreadcrumbs(routes);
 
-  return (
-    <Breadcrumb className="p-5">
-      {/* Slice breadcrumbs from the 3rd item onwards and map over each breadcrumb */}
-      {breadcrumbs.slice(2).map(({ breadcrumb, match }, index) => (
-        <Breadcrumb.Item key={index}>
-          <NavLink to={match.pathname}>{breadcrumb}</NavLink>
-        </Breadcrumb.Item>
-      ))}
-    </Breadcrumb>
-  );
+  // Convert breadcrumbs to items array
+  const breadcrumbItems = breadcrumbs.slice(2).map(({ breadcrumb, match }) => ({
+    title: <NavLink to={match.pathname}>{breadcrumb}</NavLink>,
+  }));
+
+  return <Breadcrumb className="p-5" items={breadcrumbItems} />;
 }

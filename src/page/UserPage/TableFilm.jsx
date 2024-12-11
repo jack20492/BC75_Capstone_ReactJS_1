@@ -1,14 +1,44 @@
 import enEN from "antd/locale/en_US";
-import { DeleteOutlined, FieldTimeOutlined, FormOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  FieldTimeOutlined,
+  FormOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import { adminServ } from "../../api/api";
-import { Button, Input, Popconfirm, Space, Table, message, ConfigProvider, Form, Select, InputNumber } from "antd";
-import { ModalForm, ProForm, ProFormText, ProFormDatePicker, ProFormRate } from "@ant-design/pro-components";
+import {
+  Button,
+  Input,
+  Popconfirm,
+  Space,
+  Table,
+  message,
+  ConfigProvider,
+  Form,
+  Select,
+  InputNumber,
+} from "antd";
+import {
+  ModalForm,
+  ProForm,
+  ProFormText,
+  ProFormDatePicker,
+  ProFormRate,
+} from "@ant-design/pro-components";
 // import { ModalForm, ProForm, ProFormText, ProFormDatePicker, ProFormRate, ProFormSelect } from "@ant-design/pro-components";
 import { BASE_URL, MA_NHOM, https, httpsNoLoading } from "../../api/config";
-import { defaultTrailer, placeholderImage } from "../../constants/defaultValues";
-import { imageUrlRegex, priceRegex, trailerUrlRegex, trailerYoutube } from "../../constants/regex";
+import {
+  defaultTrailer,
+  placeholderImage,
+} from "../../constants/defaultValues";
+import {
+  imageUrlRegex,
+  priceRegex,
+  trailerUrlRegex,
+  trailerYoutube,
+} from "../../constants/regex";
 import moment from "moment";
 import PlayVideo from "../../component/PlayVideo";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,7 +47,7 @@ import ModalVideo from "react-modal-video";
 import { CHOOSE_TRAILER } from "../../redux/constant/user";
 
 const waitTime = (time = 100) => {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(() => {
       resolve(true);
     }, time);
@@ -34,40 +64,42 @@ export default function TableFilm(props) {
   useEffect(() => {
     https
       .get(`${BASE_URL}/QuanLyRap/LayThongTinHeThongRap`)
-      .then(res => {
-        const newArray = res.data.map(item => ({
+      .then((res) => {
+        const newArray = res.data.map((item) => ({
           value: item.maHeThongRap,
           label: item.tenHeThongRap.toUpperCase(),
         }));
         setHeThongRap([...newArray]);
       })
-      .catch(err => {
+      .catch((err) => {
         message.error(err.response.data);
       });
   }, []);
   useEffect(() => {
     if (chonHeThongRap !== null) {
       httpsNoLoading
-        .get(`${BASE_URL}/QuanLyRap/LayThongTinCumRapTheoHeThong?maHeThongRap=${chonHeThongRap}`)
-        .then(res => {
-          const newArray = res.data.flatMap(item =>
-            item.danhSachRap.map(rapItem => ({
+        .get(
+          `${BASE_URL}/QuanLyRap/LayThongTinCumRapTheoHeThong?maHeThongRap=${chonHeThongRap}`
+        )
+        .then((res) => {
+          const newArray = res.data.flatMap((item) =>
+            item.danhSachRap.map((rapItem) => ({
               value: rapItem.maRap,
               label: item.tenCumRap + ": " + rapItem.tenRap,
-            })),
+            }))
           );
           setCumRap([...newArray]);
         })
-        .catch(err => {
+        .catch((err) => {
           message.error(err.response.data);
         });
     }
   }, [chonHeThongRap]);
-  const onImageError = e => {
+  const onImageError = (e) => {
     e.target.src = placeholderImage;
   };
   const dispatch = useDispatch();
-  const handleChooseTrailer = trailer => {
+  const handleChooseTrailer = (trailer) => {
     let videoId = "";
     if (trailerYoutube.test(trailer) || trailer.includes("embed")) {
       const parts = trailer.split("/");
@@ -80,18 +112,18 @@ export default function TableFilm(props) {
   };
   const [form] = Form.useForm();
   const { listMovie, fetchListMovie } = props;
-  const deleteFilm = maPhim => {
+  const deleteFilm = (maPhim) => {
     adminServ
       .deleteFilm(maPhim)
       .then(() => {
         message.success("Delete successfully!");
         fetchListMovie();
       })
-      .catch(err => {
+      .catch((err) => {
         message.error(err.response.data ?? err.message);
       });
   };
-  const handleDelete = maPhim => deleteFilm(maPhim);
+  const handleDelete = (maPhim) => deleteFilm(maPhim);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
@@ -100,26 +132,34 @@ export default function TableFilm(props) {
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
-  const handleReset = clearFilters => {
+  const handleReset = (clearFilters) => {
     clearFilters();
     setSearchText("");
   };
-  const { chosenTrailer } = useSelector(state => {
+  const { chosenTrailer } = useSelector((state) => {
     return state.userReducer;
   });
-  const getColumnSearchProps = dataIndex => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close,
+    }) => (
       <div
         style={{
           padding: 8,
         }}
-        onKeyDown={e => e.stopPropagation()}
+        onKeyDown={(e) => e.stopPropagation()}
       >
         <Input
           ref={searchInput}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
           style={{
             marginBottom: 8,
@@ -128,11 +168,11 @@ export default function TableFilm(props) {
         />
         <Space>
           <Button
-            type='primary'
+            type="primary"
             onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
-            className='bg-blue-500'
-            size='small'
+            className="bg-blue-500"
+            size="small"
             style={{
               width: 90,
             }}
@@ -141,7 +181,7 @@ export default function TableFilm(props) {
           </Button>
           <Button
             onClick={() => clearFilters && handleReset(clearFilters)}
-            size='small'
+            size="small"
             style={{
               width: 90,
             }}
@@ -149,8 +189,8 @@ export default function TableFilm(props) {
             Reset
           </Button>
           <Button
-            type='link'
-            size='small'
+            type="link"
+            size="small"
             onClick={() => {
               confirm({
                 closeDropdown: false,
@@ -162,8 +202,8 @@ export default function TableFilm(props) {
             Filter
           </Button>
           <Button
-            type='link'
-            size='small'
+            type="link"
+            size="small"
             onClick={() => {
               close();
             }}
@@ -173,20 +213,23 @@ export default function TableFilm(props) {
         </Space>
       </div>
     ),
-    filterIcon: filtered => (
+    filterIcon: (filtered) => (
       <SearchOutlined
         style={{
           color: filtered ? "#1677ff" : undefined,
         }}
       />
     ),
-    onFilter: (value, record) => record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
-    onFilterDropdownOpenChange: visible => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
-      }
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    filterDropdownProps: {
+      onOpenChange: (visible) => {
+        if (visible) {
+          setTimeout(() => searchInput.current?.select(), 100);
+        }
+      },
     },
-    render: text =>
+    render: (text) =>
       searchedColumn === dataIndex ? (
         <Highlighter
           highlightStyle={{
@@ -221,7 +264,7 @@ export default function TableFilm(props) {
       dataIndex: "tenPhim",
       key: "tenPhim",
       ...getColumnSearchProps("tenPhim"),
-      render: text => <p className='truncate'>{text}</p>,
+      render: (text) => <p className="truncate">{text}</p>,
     },
     // {
     //   title: "Film alias",
@@ -234,18 +277,25 @@ export default function TableFilm(props) {
       dataIndex: "trailer",
       key: "trailer",
       ...getColumnSearchProps("trailer"),
-      render: text => (
+      render: (text) => (
         <>
           {trailerUrlRegex.test(text) ? (
-            <div className='relative group'>
-              <div className='bg-black h-20 w-20 mx-auto rounded-lg'></div>
-              <PlayVideo trailer={text ?? defaultTrailer} onClick={() => handleChooseTrailer(trailerUrlRegex.test(text) ? text : defaultTrailer)} />
+            <div className="relative group">
+              <div className="bg-black h-20 w-20 mx-auto rounded-lg"></div>
+              <PlayVideo
+                trailer={text ?? defaultTrailer}
+                onClick={() =>
+                  handleChooseTrailer(
+                    trailerUrlRegex.test(text) ? text : defaultTrailer
+                  )
+                }
+              />
             </div>
           ) : (
             <img
               alt={text}
-              src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMwCOc2tSRnVaWoY24XHxx0ADxtdSN4nEHpdIsNRtuZn_P8SF6FJQmAjwJBY3rV-6dxeY&usqp=CAU'
-              className='w-20 h-20 object-cover mx-auto rounded-lg'
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMwCOc2tSRnVaWoY24XHxx0ADxtdSN4nEHpdIsNRtuZn_P8SF6FJQmAjwJBY3rV-6dxeY&usqp=CAU"
+              className="w-20 h-20 object-cover mx-auto rounded-lg"
             />
           )}
         </>
@@ -255,9 +305,9 @@ export default function TableFilm(props) {
       title: "Poster",
       key: "hinhAnh",
       dataIndex: "hinhAnh",
-      render: text => (
+      render: (text) => (
         <img
-          className='w-20 h-20 object-cover mx-auto rounded-lg'
+          className="w-20 h-20 object-cover mx-auto rounded-lg"
           alt={text}
           src={imageUrlRegex.test(text) ? text : placeholderImage}
           onError={onImageError}
@@ -269,27 +319,27 @@ export default function TableFilm(props) {
       key: "moTa",
       dataIndex: "moTa",
       ...getColumnSearchProps("moTa"),
-      render: text => <p className='truncate'>{text}</p>,
+      render: (text) => <p className="truncate">{text}</p>,
     },
     {
       title: "Started date",
       key: "ngayKhoiChieu",
       dataIndex: "ngayKhoiChieu",
       ...getColumnSearchProps("ngayKhoiChieu"),
-      render: text => <p>{moment(text).format("DD-MM-YYYY")}</p>,
+      render: (text) => <p>{moment(text).format("DD-MM-YYYY")}</p>,
     },
     {
       title: "Rating",
       key: "danhGia",
       dataIndex: "danhGia",
       ...getColumnSearchProps("danhGia"),
-      render: text => <p>{text} / 10</p>,
+      render: (text) => <p>{text} / 10</p>,
     },
     {
       title: "Action",
       key: "action",
-      render: item => (
-        <Space size='middle'>
+      render: (item) => (
+        <Space size="middle">
           <ConfigProvider button={{ className: "bg-blue-500" }} locale={enEN}>
             <ModalForm
               submitter={{
@@ -310,9 +360,13 @@ export default function TableFilm(props) {
               title={`Edit film ${item.tenPhim} (#${item.maPhim})`}
               trigger={
                 <FormOutlined
-                  className='text-xl text-yellow-500 hover:text-yellow-300 duration-300'
+                  className="text-xl text-yellow-500 hover:text-yellow-300 duration-300"
                   onClick={() => {
-                    form.setFieldsValue({ ...item, danhGia: item.danhGia / 2, ngayKhoiChieu: moment(item.ngayKhoiChieu) });
+                    form.setFieldsValue({
+                      ...item,
+                      danhGia: item.danhGia / 2,
+                      ngayKhoiChieu: moment(item.ngayKhoiChieu),
+                    });
                     setHinhAnh(item.hinhAnh);
                     setTrailerUrl(item.trailer);
                   }}
@@ -325,7 +379,7 @@ export default function TableFilm(props) {
                 onCancel: () => {},
               }}
               submitTimeout={2000}
-              onFinish={async values => {
+              onFinish={async (values) => {
                 await waitTime(2000);
                 https
                   .post(`${BASE_URL}/QuanLyPhim/CapNhatPhim`, {
@@ -335,10 +389,12 @@ export default function TableFilm(props) {
                     danhGia: values.danhGia * 2,
                   })
                   .then(() => {
-                    message.success(`Edit film ${values.tenPhim} successfully!`);
+                    message.success(
+                      `Edit film ${values.tenPhim} successfully!`
+                    );
                     fetchListMovie();
                   })
-                  .catch(err => {
+                  .catch((err) => {
                     message.error(err.response.data);
                   });
                 return true;
@@ -346,10 +402,10 @@ export default function TableFilm(props) {
             >
               <ProForm.Group>
                 <ProFormText
-                  width='md'
-                  name='tenPhim'
-                  label='Film name'
-                  placeholder='John Wick 2'
+                  width="md"
+                  name="tenPhim"
+                  label="Film name"
+                  placeholder="John Wick 2"
                   rules={[
                     {
                       required: true,
@@ -371,11 +427,11 @@ export default function TableFilm(props) {
               ]}
             /> */}
                 <ProFormText
-                  width='md'
-                  name='trailer'
-                  label='Youtube trailer'
-                  placeholder='https://youtube.com/abc'
-                  onChange={e => setTrailerUrl(e.target.value)}
+                  width="md"
+                  name="trailer"
+                  label="Youtube trailer"
+                  placeholder="https://youtube.com/abc"
+                  onChange={(e) => setTrailerUrl(e.target.value)}
                   rules={[
                     {
                       required: true,
@@ -388,11 +444,11 @@ export default function TableFilm(props) {
                   ]}
                 />
                 <ProFormText
-                  width='md'
-                  name='hinhAnh'
-                  label='Film poster'
-                  placeholder='https://domain.com/abc.png'
-                  onChange={e => setHinhAnh(e.target.value)}
+                  width="md"
+                  name="hinhAnh"
+                  label="Film poster"
+                  placeholder="https://domain.com/abc.png"
+                  onChange={(e) => setHinhAnh(e.target.value)}
                   rules={[
                     {
                       required: true,
@@ -405,10 +461,10 @@ export default function TableFilm(props) {
                   ]}
                 />
                 <ProFormText
-                  width='md'
-                  name='moTa'
-                  label='Film description'
-                  placeholder='This is a good film...'
+                  width="md"
+                  name="moTa"
+                  label="Film description"
+                  placeholder="This is a good film..."
                   rules={[
                     {
                       required: true,
@@ -430,13 +486,13 @@ export default function TableFilm(props) {
               ]}
             /> */}
                 <ProFormDatePicker
-                  width='md'
-                  name='ngayKhoiChieu'
+                  width="md"
+                  name="ngayKhoiChieu"
                   fieldProps={{
                     format: "DD-MM-YYYY",
                   }}
-                  label='Started date'
-                  placeholder='Choose date'
+                  label="Started date"
+                  placeholder="Choose date"
                   rules={[
                     {
                       required: true,
@@ -457,44 +513,52 @@ export default function TableFilm(props) {
               ]}
             /> */}
                 <ProFormRate
-                  width='md'
-                  name='danhGia'
-                  label='Rating'
+                  width="md"
+                  name="danhGia"
+                  label="Rating"
                   rules={[
                     {
                       required: true,
                       message: "Please input rating!",
                     },
                   ]}
-                  placeholder='10'
+                  placeholder="10"
                 />
               </ProForm.Group>
-              <div className='flex justify-around items-center'>
+              <div className="flex justify-around items-center">
                 <div>
-                  <p className='mb-3'>Poster preview:</p>
+                  <p className="mb-3">Poster preview:</p>
                   <img
-                    className='w-20 h-20 mx-auto object-cover rounded-lg'
+                    className="w-20 h-20 mx-auto object-cover rounded-lg"
                     alt={hinhAnh}
-                    src={imageUrlRegex.test(hinhAnh) ? hinhAnh : placeholderImage}
+                    src={
+                      imageUrlRegex.test(hinhAnh) ? hinhAnh : placeholderImage
+                    }
                     onError={onImageError}
                   />
                 </div>
                 <div>
-                  <p className='mb-3'>Trailer preview:</p>
+                  <p className="mb-3">Trailer preview:</p>
                   <>
                     {trailerUrlRegex.test(trailerUrl) ? (
-                      <div className='relative group'>
-                        <div className='bg-black h-20 w-20 mx-auto rounded-lg'></div>
+                      <div className="relative group">
+                        <div className="bg-black h-20 w-20 mx-auto rounded-lg"></div>
                         <PlayVideo
                           trailer={trailerUrl ?? defaultTrailer}
-                          onClick={() => handleChooseTrailer(trailerUrlRegex.test(trailerUrl) ? trailerUrl : defaultTrailer)}
+                          onClick={() =>
+                            handleChooseTrailer(
+                              trailerUrlRegex.test(trailerUrl)
+                                ? trailerUrl
+                                : defaultTrailer
+                            )
+                          }
                         />
                       </div>
                     ) : (
                       <img
                         alt={trailerUrl}
-                        src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMwCOc2tSRnVaWoY24XHxx0ADxtdSN4nEHpdIsNRtuZn_P8SF6FJQmAjwJBY3rV-6dxeY&usqp=CAU'
-                        className='w-20 h-20 object-cover mx-auto rounded-lg'
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMwCOc2tSRnVaWoY24XHxx0ADxtdSN4nEHpdIsNRtuZn_P8SF6FJQmAjwJBY3rV-6dxeY&usqp=CAU"
+                        className="w-20 h-20 object-cover mx-auto rounded-lg"
                       />
                     )}
                   </>
@@ -509,7 +573,7 @@ export default function TableFilm(props) {
             }}
             onConfirm={() => handleDelete(item.maPhim)}
           >
-            <DeleteOutlined className='text-xl text-red-500 hover:text-red-300 duration-300' />
+            <DeleteOutlined className="text-xl text-red-500 hover:text-red-300 duration-300" />
           </Popconfirm>
           <ConfigProvider button={{ className: "bg-blue-500" }} locale={enEN}>
             <ModalForm
@@ -534,7 +598,7 @@ export default function TableFilm(props) {
                   onClick={() => {
                     form.setFieldsValue({ ...item });
                   }}
-                  className='text-xl text-blue-500 hover:text-blue-300 duration-300'
+                  className="text-xl text-blue-500 hover:text-blue-300 duration-300"
                 />
               }
               form={form}
@@ -547,7 +611,7 @@ export default function TableFilm(props) {
                 },
               }}
               submitTimeout={2000}
-              onFinish={async values => {
+              onFinish={async (values) => {
                 await waitTime(2000);
                 httpsNoLoading
                   .post(`${BASE_URL}/QuanLyDatVe/TaoLichChieu`, {
@@ -558,40 +622,52 @@ export default function TableFilm(props) {
                     // giaVe: values.giaVe.replace(/[^\d]/g, ""),
                   })
                   .then(() => {
-                    message.success(`Create showtime for film ${item.tenPhim.toUpperCase()} successfully!`);
+                    message.success(
+                      `Create showtime for film ${item.tenPhim.toUpperCase()} successfully!`
+                    );
                   })
-                  .catch(err => {
+                  .catch((err) => {
                     message.error(err.response.data);
                   });
                 return true;
               }}
             >
-              <div className='flex justify-around items-center'>
+              <div className="flex justify-around items-center">
                 <div>
-                  <p className='mb-3'>Poster preview:</p>
+                  <p className="mb-3">Poster preview:</p>
                   <img
-                    className='w-20 h-20 mx-auto object-cover rounded-lg'
+                    className="w-20 h-20 mx-auto object-cover rounded-lg"
                     alt={item.hinhAnh}
-                    src={imageUrlRegex.test(item.hinhAnh) ? item.hinhAnh : placeholderImage}
+                    src={
+                      imageUrlRegex.test(item.hinhAnh)
+                        ? item.hinhAnh
+                        : placeholderImage
+                    }
                     onError={onImageError}
                   />
                 </div>
                 <div>
-                  <p className='mb-3'>Trailer preview:</p>
+                  <p className="mb-3">Trailer preview:</p>
                   <>
                     {trailerUrlRegex.test(item.trailer) ? (
-                      <div className='relative group'>
-                        <div className='bg-black h-20 w-20 mx-auto rounded-lg'></div>
+                      <div className="relative group">
+                        <div className="bg-black h-20 w-20 mx-auto rounded-lg"></div>
                         <PlayVideo
                           trailer={item.trailer ?? defaultTrailer}
-                          onClick={() => handleChooseTrailer(trailerUrlRegex.test(item.trailer) ? item.trailer : defaultTrailer)}
+                          onClick={() =>
+                            handleChooseTrailer(
+                              trailerUrlRegex.test(item.trailer)
+                                ? item.trailer
+                                : defaultTrailer
+                            )
+                          }
                         />
                       </div>
                     ) : (
                       <img
                         alt={item.trailer}
-                        src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMwCOc2tSRnVaWoY24XHxx0ADxtdSN4nEHpdIsNRtuZn_P8SF6FJQmAjwJBY3rV-6dxeY&usqp=CAU'
-                        className='w-20 h-20 object-cover mx-auto rounded-lg'
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMwCOc2tSRnVaWoY24XHxx0ADxtdSN4nEHpdIsNRtuZn_P8SF6FJQmAjwJBY3rV-6dxeY&usqp=CAU"
+                        className="w-20 h-20 object-cover mx-auto rounded-lg"
                       />
                     )}
                   </>
@@ -599,13 +675,13 @@ export default function TableFilm(props) {
               </div>
               <ProForm.Group>
                 <ProFormDatePicker
-                  width='md'
-                  name='ngayChieuGioChieu'
+                  width="md"
+                  name="ngayChieuGioChieu"
                   fieldProps={{
                     format: "DD/MM/YYYY hh:mm:ss",
                   }}
-                  label='Showtime'
-                  placeholder='Choose showtime'
+                  label="Showtime"
+                  placeholder="Choose showtime"
                   rules={[
                     {
                       required: true,
@@ -646,8 +722,8 @@ export default function TableFilm(props) {
                 /> */}
               </ProForm.Group>
               <Form.Item
-                name='giaVe'
-                label='Price'
+                name="giaVe"
+                label="Price"
                 rules={[
                   {
                     required: true,
@@ -655,20 +731,23 @@ export default function TableFilm(props) {
                   },
                   {
                     pattern: new RegExp(priceRegex),
-                    message: "Ticket price cannot contain decimals & must be from 75,000 to 200,000 VND",
+                    message:
+                      "Ticket price cannot contain decimals & must be from 75,000 to 200,000 VND",
                   },
                 ]}
               >
                 <InputNumber
-                  className='w-full'
-                  placeholder='200,000'
-                  formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                  parser={value => value.replace(/\$\s?|(,*)/g, "")}
+                  className="w-full"
+                  placeholder="200,000"
+                  formatter={(value) =>
+                    `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                  }
+                  parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
                 />
               </Form.Item>
               <Form.Item
-                name='heThongRap'
-                label='Cinema system'
+                name="heThongRap"
+                label="Cinema system"
                 rules={[
                   {
                     required: true,
@@ -676,11 +755,15 @@ export default function TableFilm(props) {
                   },
                 ]}
               >
-                <Select options={heThongRap} onChange={value => setChonHeThongRap(value)} placeholder='Select cinema system' />
+                <Select
+                  options={heThongRap}
+                  onChange={(value) => setChonHeThongRap(value)}
+                  placeholder="Select cinema system"
+                />
               </Form.Item>
               <Form.Item
-                name='cumRap'
-                label='Theater of the cinema'
+                name="cumRap"
+                label="Theater of the cinema"
                 rules={[
                   {
                     required: true,
@@ -691,8 +774,8 @@ export default function TableFilm(props) {
                 <Select
                   disabled={chonHeThongRap === null}
                   options={cumRap}
-                  onChange={value => setChonRap(value)}
-                  placeholder='Select theater of the cinema'
+                  onChange={(value) => setChonRap(value)}
+                  placeholder="Select theater of the cinema"
                 />
               </Form.Item>
             </ModalForm>
@@ -704,7 +787,7 @@ export default function TableFilm(props) {
   return (
     <>
       <ModalVideo
-        channel='youtube'
+        channel="youtube"
         youtube={{ mute: 0, autoplay: 0 }}
         isOpen={chosenTrailer !== ""}
         videoId={chosenTrailer}

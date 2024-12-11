@@ -39,7 +39,7 @@ export default function DetailMovie() {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <Spin size="large" />
+        <Spin size="large" spinning={loading} />
       </div>
     );
   }
