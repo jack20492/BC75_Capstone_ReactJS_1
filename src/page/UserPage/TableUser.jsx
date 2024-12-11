@@ -104,8 +104,10 @@ export default function TableUser({ listUser, fetchListUser }) {
     ),
     onFilter: (value, record) =>
       record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
-    onFilterDropdownOpenChange: (visible) =>
-      visible && setTimeout(() => searchInput.current?.select(), 100),
+    filterDropdownProps: {
+      onOpenChange: (visible) =>
+        visible && setTimeout(() => searchInput.current?.select(), 100),
+    },
     render: (text) =>
       searchedColumn === dataIndex ? (
         <Highlighter
@@ -299,7 +301,10 @@ export default function TableUser({ listUser, fetchListUser }) {
   return (
     <Table
       scroll={{ y: 390, x: 1200 }}
-      dataSource={listUser}
+      dataSource={listUser.map((user) => ({
+        ...user,
+        key: user.taiKhoan, // Add key to each row
+      }))}
       columns={columnsHeader}
     />
   );

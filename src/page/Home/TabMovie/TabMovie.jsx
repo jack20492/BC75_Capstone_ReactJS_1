@@ -132,7 +132,7 @@ export default function TabMovie() {
   if (loading) {
     return (
       <div className="container p-3 rounded border-2 border-l-black">
-        <Spin tip="Loading..." />
+        <Spin size="large" />
       </div>
     );
   }
