@@ -17,7 +17,7 @@ export const configHeaders = () => ({
   TokenCybersoft: TOKEN_CYBER,
 });
 
-// Axios Instances
+// Axios instance with loading
 export const https = axios.create({
   baseURL: BASE_URL,
   headers: {
@@ -26,6 +26,7 @@ export const https = axios.create({
   },
 });
 
+// Axios instance without loading (No Loading Spinner)
 export const httpsNoLoading = axios.create({
   baseURL: BASE_URL,
   headers: {
