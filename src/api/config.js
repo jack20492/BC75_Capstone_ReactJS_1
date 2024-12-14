@@ -6,7 +6,7 @@ import { SET_LOADING_OFF, SET_LOADING_ON } from "../redux/constant/spinner";
 // Environment Variables
 export const TOKEN_CYBER = import.meta.env.VITE_TOKEN_CYBERSOFT;
 export const BASE_URL = import.meta.env.VITE_BASE_URL;
-export const BASE_URL_2 = "https://movienew.cybersoft.edu.vn/api";
+export const BASE_URL_2 = import.meta.env.VITE_BASE_URL_2;
 export const MA_NHOM = "GP04";
 
 // Access Token
