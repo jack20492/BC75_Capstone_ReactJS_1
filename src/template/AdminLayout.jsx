@@ -77,7 +77,7 @@ const AdminLayout = () => {
           }}
         >
           <span className="text-white font-medium text-2xl">
-            CyberFlix Admin
+            Admin Dashboard
           </span>
           <div className="flex justify-center items-center gap-x-3">
             <div
